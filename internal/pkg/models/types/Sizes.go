@@ -1,7 +1,7 @@
 package types
 
-type Sizes struct {
-	Id     int     `json:"id"`
-	Name   string  `json:"name"`
-	Pirice float64 `json:"pirice"`
+type Sizestypes struct {
+	Id    int     `json:"id"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
 }

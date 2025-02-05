@@ -6,14 +6,14 @@ import (
 	"web-api/internal/pkg/models/types"
 )
 
-type BasesService struct {
+type SizeService struct {
 	*BaseService
 }
 
-var Order = &BasesService{}
+var OrderSize = &SizeService{}
 
-func (s *BasesService) BasesSevice() ([]types.Basestypes, error) {
-	var orders []types.Basestypes
+func (s *SizeService) SizesSevice() ([]types.Sizestypes, error) {
+	var orders []types.Sizestypes
 
 	// Kết nối database
 	db, err := database.DB1Connection()
@@ -27,7 +27,7 @@ func (s *BasesService) BasesSevice() ([]types.Basestypes, error) {
 
 	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
 	query := `
-		SELECT * FROM OrderSystem.Bases 
+		SELECT * FROM OrderSystem.Sizes 
 
 	`
 
