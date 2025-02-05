@@ -1,0 +1,25 @@
+server:
+  port: '8081'
+  secret: '8-*e%yKHe3E%%u27$.eN3vdCsZq$Khc$Mp84ZDEQ+y$6f5Q%6rYDk4CS74KzFd2.'
+  #release | debug
+  mode: 'debug'
+
+cors:
+  global: 'true'
+  ips: 'http://127.0.0.1:8081,http://localhost:8081'
+
+database:
+  #mysql | postgres | sqlite | sqlserver
+  driver: 'mysql'
+  dbname: 'OrderSystem'
+  username: 'test'
+  password: 'passtest'
+  host: '192.168.40.104'
+  port: '3306'
+  sslmode: 'false'
+  logmode: 'true'
+email:
+  username: "le0963845867@gmail.com"
+  password: "nlmc lqev ejih ctam"
+  host: "smtp.gmail.com"
+  port: "587"
