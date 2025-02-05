@@ -13,5 +13,6 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	router.GET("/Getbases", controllers.Basese.Getbasese)
 	router.GET("/Getsize", controllers.Sizes.GetSizes)
 	router.GET("/Getflavors", controllers.Flavors.GetFlavors)
+	router.GET("/GeticeLevels", controllers.IceLevels.GetIceLevels)
 
 }

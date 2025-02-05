@@ -75,3 +75,9 @@ join Sizes on Sizes.id = size_id
 		SELECT * FROM OrderSystem.Sizes 
 
 	
+
+2025/02/05 15:16:13 D:/DA/internal/api/services/Flavors_sevice.go:35
+[4.139ms] [rows:3] 
+		SELECT * FROM OrderSystem.Flavors 
+
+	
