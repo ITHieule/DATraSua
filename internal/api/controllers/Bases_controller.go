@@ -21,7 +21,7 @@ func (c *BasesController) Getbases(ctx *gin.Context) {
 		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
 		return
 	}
-	result, err := services.Order.BasesSevice(nil)
+	result, err := services.Order.BasesSevice()
 	if err != nil {
 		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
 	}
