@@ -20,6 +20,8 @@
 [GIN-debug] POST   /api/v1/System/Login      --> web-api/internal/api/controllers.(*UserController).Login-fm (4 handlers)
 [GIN-debug] GET    /api/v1/System/Getbases   --> web-api/internal/api/controllers.(*BaseseController).Getbasese-fm (4 handlers)
 [GIN-debug] GET    /api/v1/System/Getsize    --> web-api/internal/api/controllers.(*SizesController).GetSizes-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/Getflavors --> web-api/internal/api/controllers.(*FlavorsController).GetFlavors-fm (4 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8081
+::1 - - [05/Feb/2025:15:16:13 +0700] "GET /api/v1/System/Getflavors HTTP/1.1 200 25.0064ms " " PostmanRuntime/7.43.0" " "
