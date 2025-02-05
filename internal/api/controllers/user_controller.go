@@ -9,13 +9,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type OrderController struct {
+type UserController struct {
 	*BaseController
 }
 
-var Order = &OrderController{}
+var User = &UserController{}
 
-func (c *OrderController) Register(ctx *gin.Context) {
+func (c *UserController) Register(ctx *gin.Context) {
 	var requestParams request.User
 	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
 		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
@@ -28,7 +28,7 @@ func (c *OrderController) Register(ctx *gin.Context) {
 	response.OkWithData(ctx, result)
 }
 
-func (c *OrderController) Login(ctx *gin.Context) {
+func (c *UserController) Login(ctx *gin.Context) {
 	var requestParams request.User
 	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
 		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())

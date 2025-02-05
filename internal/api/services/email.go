@@ -1,10 +1,12 @@
 package services
 
 import (
-	"github.com/go-gomail/gomail"
-	"github.com/spf13/viper"
+	"fmt"
 	"log"
 	"strconv"
+
+	"github.com/go-gomail/gomail"
+	"github.com/spf13/viper"
 )
 
 // Hàm gửi email
@@ -41,5 +43,6 @@ func SendEmail(to string, subject string, body string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("📧 Email đã gửi thành công tới", to)
 	return nil
 }
