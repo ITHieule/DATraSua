@@ -10,6 +10,7 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 
 	router.POST("/register", controllers.User.Register)
 	router.POST("/Login", controllers.User.Login)
-	router.POST("/Getbases", controllers.Bases.Getbases)
+	router.GET("/Getbases", controllers.Basese.Getbasese)
+	router.GET("/Getsize", controllers.Sizes.GetSizes)
 
 }

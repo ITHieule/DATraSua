@@ -43,3 +43,35 @@
 
 2025/02/05 12:49:20 D:/DA/internal/api/services/userservice.go:70
 [8.091ms] [rows:1] SELECT * FROM Users WHERE Username = 'Le'
+
+2025/02/05 14:14:09 D:/DA/internal/api/services/basesorder.go:36
+[4.524ms] [rows:1] 
+		SELECT * FROM OrderSystem.BaseSizes 
+join Bases on Bases.id = base_id
+join Sizes on Sizes.id = size_id
+	
+
+2025/02/05 14:18:20 D:/DA/internal/api/services/basesorder.go:36
+[3.531ms] [rows:2] 
+		SELECT * FROM OrderSystem.BaseSizes 
+join Bases on Bases.id = base_id
+join Sizes on Sizes.id = size_id
+	
+
+2025/02/05 14:47:23 D:/DA/internal/api/services/basesorder.go:35
+[1.723ms] [rows:2] 
+		SELECT * FROM OrderSystem.Bases 
+
+	
+
+2025/02/05 14:48:00 D:/DA/internal/api/services/basesorder.go:35
+[3.214ms] [rows:2] 
+		SELECT * FROM OrderSystem.Bases 
+
+	
+
+2025/02/05 14:57:53 D:/DA/internal/api/services/size_sevice.go:35
+[1.406ms] [rows:2] 
+		SELECT * FROM OrderSystem.Sizes 
+
+	
