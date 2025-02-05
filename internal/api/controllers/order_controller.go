@@ -9,19 +9,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type BasesController struct {
+type OrderController struct {
 	*BaseController
 }
 
-var Bases = &BasesController{}
+var Order = &OrderController{}
 
-func (c *BasesController) Getbases(ctx *gin.Context) {
-	var requestParams request.User
+func (c *OrderController) CreateOrder(ctx *gin.Context) {
+	var requestParams request.OrderRequest
 	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
 		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
 		return
 	}
-	result, err := services.Order.BasesSevice(nil)
+
+	result, err := services.Orders.Create(&requestParams)
+
 	if err != nil {
 		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
 	}
