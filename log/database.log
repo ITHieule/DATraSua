@@ -1,0 +1,45 @@
+
+2025/02/05 11:05:36 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:44 Error 1146 (42S02): Table 'OrderSystem.User' doesn't exist
+[41.139ms] [rows:-] INSERT INTO User (Username, Password_hash, Email,Password,Phone,Role ,Is_verified) VALUES ('newuser', 'newhashedpassword', 'new@example.com', '$2a$10$8/1LotxgvR10sqVdXnJvhe1q4O0z3iQTAMwwJ01GP0J2N32puq2Yu', '0987654321', 'user', false)
+
+2025/02/05 11:06:17 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:44 Error 1146 (42S02): Table 'OrderSystem.User' doesn't exist
+[0.000ms] [rows:-] INSERT INTO User (Username, Password_hash, Email,Password,Phone,Role ,Is_verified) VALUES ('newuser', 'newhashedpassword', 'new@example.com', '$2a$10$/ncSa8iBDDNNKpS15VA87..147D.1WxwP0K9FS7P9USFjA2TCSemi', '0987654321', 'user', false)
+
+2025/02/05 11:07:36 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:44 Error 1054 (42S22): Unknown column 'Password' in 'field list'
+[0.000ms] [rows:-] INSERT INTO Users (Username, Password_hash, Email,Password,Phone,Role ,Is_verified) VALUES ('newuser', 'newhashedpassword', 'new@example.com', '$2a$10$sIgZNvE.RaU0qfin101C5u/fEAn2hMaXhsUsB.S9hRaluBJizh0sS', '0987654321', 'user', false)
+
+2025/02/05 11:09:15 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:43 Error 1136 (21S01): Column count doesn't match value count at row 1
+[10.964ms] [rows:-] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('newuser', '$2a$10$JVy9fcRbbTkHTQvkJC0VqO5D/bZcz4cfdgPEveRKePr/MfSfvuqjm', 'new@example.com', '0987654321', 'user', false, ?)
+
+2025/02/05 11:09:42 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:43
+[10.817ms] [rows:0] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('newuser', '$2a$10$fub8NLov07BSNha5EOOUnOWeoo7kiiks/QfAD9Em.YwTORT.3SZ9y', 'new@example.com', '0987654321', 'user', false)
+
+2025/02/05 11:14:08 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:47 Error 1062 (23000): Duplicate entry 'new@example.com' for key 'email'
+[85.565ms] [rows:-] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('PhanLe', '$2a$10$CT92DpATnfVn74/ukaS8weaSBLk38ytbciWQIsxc/lFRnOKqNBaMG', 'new@example.com', '0987654321', 'user', true)
+
+2025/02/05 11:14:19 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:47
+[10.247ms] [rows:0] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('PhanLe', '$2a$10$hU0osvetAxF2.cTEJln5.OYlWaNggG6MR9X310PDOXbdG5ZM6iM/S', 'so1so2@example.com', '0987654321', 'user', true)
+
+2025/02/05 11:21:26 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:70
+[158.511ms] [rows:0] SELECT * FROM Users WHERE Email = ''
+
+2025/02/05 11:23:54 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:70
+[7.286ms] [rows:0] SELECT * FROM Users WHERE Email = ''
+
+2025/02/05 11:25:44 C:/Users/ITHieule/Desktop/GitLab/betb/DATraSua/internal/api/services/userservice.go:70
+[63.918ms] [rows:1] SELECT * FROM Users WHERE Username = 'PhanLe'
+
+2025/02/05 12:47:35 D:/DA/internal/api/services/userservice.go:48 Error 1062 (23000): Duplicate entry 'newuser' for key 'username'
+[248.969ms] [rows:-] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('newuser', '$2a$10$0b8omHb//1sbH3OUzrbR2.Hc6TB/215.9XyGahNP4dN9QfmXjLMf.', 'so1@example.com', '0987654321', 'user', true)
+
+2025/02/05 12:47:56 D:/DA/internal/api/services/userservice.go:70
+[13.707ms] [rows:1] SELECT * FROM Users WHERE Username = 'newuser'
+
+2025/02/05 12:48:43 D:/DA/internal/api/services/userservice.go:48
+[12.687ms] [rows:0] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('Le', '$2a$10$O8wr5JXMdkLE2BY0B65kKeZJXLuN4.pHEipprsjUvACRJ/V/sgJmK', 'so1@example.com', '0987654321', 'user', true)
+
+2025/02/05 12:49:04 D:/DA/internal/api/services/userservice.go:70
+[5.046ms] [rows:0] SELECT * FROM Users WHERE Username = ''
+
+2025/02/05 12:49:20 D:/DA/internal/api/services/userservice.go:70
+[8.091ms] [rows:1] SELECT * FROM Users WHERE Username = 'Le'
