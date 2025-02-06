@@ -50,18 +50,9 @@ func (s *OrderDetailsService) CalculatePrice(baseID, sizeID int) (float64, error
 	return totalPrice, nil
 }
 
-// Hàm tạo chi tiết đơn hàng
-func (s *OrderDetailsService) Create(requestParams *request.OrderDetailsRequest) ([]types.OrderDetailsTypes, error) {
+// Hàm tạo đơn hàng và chi tiết đơn hàng
+func (s *OrderDetailsService) Create(requestParams *request.OrderRequest) ([]types.OrderDetailsTypes, error) {
 	var orderDetails []types.OrderDetailsTypes
-
-	// Tính giá từ base_id và size_id
-	price, err := s.CalculatePrice(requestParams.Base_id, requestParams.Size_id)
-	if err != nil {
-		return nil, fmt.Errorf("Error calculating price: %v", err)
-	}
-
-	// Gán giá tính được vào requestParams.Price
-	requestParams.Price = price
 
 	// Kết nối cơ sở dữ liệu
 	db, err := database.DB1Connection()
@@ -73,24 +64,61 @@ func (s *OrderDetailsService) Create(requestParams *request.OrderDetailsRequest)
 	dbInstance, _ := db.DB()
 	defer dbInstance.Close()
 
-	// Câu lệnh INSERT vào bảng OrderDetails
-	query := "INSERT INTO OrderDetails (order_id, base_id, flavor_id, sweetness_id, ice_id, size_id, price) VALUES (?, ?, ?, ?, ?, ?, ?)"
-	err = db.Raw(query,
-		requestParams.Order_id,
-		requestParams.Base_id,
-		requestParams.Flavor_id,
-		requestParams.Sweetness_id,
-		requestParams.Ice_id,
-		requestParams.Size_id,
-		requestParams.Price,
-	).Scan(&orderDetails).Error
+	// Câu lệnh INSERT để tạo đơn hàng
+	orderQuery := "INSERT INTO Orders (user_id, order_date, status) VALUES (?, ?, ?)"
+	res := db.Exec(orderQuery, requestParams.UserID, requestParams.OrderDate, requestParams.Status)
+	if res.Error != nil {
+		fmt.Println("Error creating order:", res.Error)
+		return nil, res.Error
+	}
+
+	// Lấy giá trị order_id tự sinh sau khi thực hiện INSERT
+	var orderID int
+	err = db.Raw("SELECT LAST_INSERT_ID()").Scan(&orderID).Error
 	if err != nil {
-		fmt.Println("Query execution error:", err)
+		fmt.Println("Error fetching last insert ID:", err)
 		return nil, err
 	}
 
+	// Gán order_id cho requestParams
+	requestParams.ID = uint(orderID)
+
+	// Kiểm tra lại xem order_id đã được sinh chưa
+	if requestParams.ID == 0 {
+		return nil, fmt.Errorf("Failed to create order, order_id is missing")
+	}
+
+	// Duyệt qua từng OrderDetails trong mảng và tạo từng chi tiết
+	for _, detail := range requestParams.OrderDetails {
+		// Tính giá cho từng chi tiết đơn hàng
+		price, err := s.CalculatePrice(detail.Base_id, detail.Size_id)
+		if err != nil {
+			return nil, fmt.Errorf("Error calculating price for detail: %v", err)
+		}
+
+		// Gán giá tính được vào detail
+		detail.Price = price
+		detail.Order_id = int(requestParams.ID) // Gán order_id đã tự sinh
+
+		// Câu lệnh INSERT vào bảng OrderDetails
+		query := "INSERT INTO OrderDetails (order_id, base_id, flavor_id, sweetness_id, ice_id, size_id, price) VALUES (?, ?, ?, ?, ?, ?, ?)"
+		err = db.Raw(query,
+			detail.Order_id,
+			detail.Base_id,
+			detail.Flavor_id,
+			detail.Sweetness_id,
+			detail.Ice_id,
+			detail.Size_id,
+			detail.Price,
+		).Scan(&orderDetails).Error
+		if err != nil {
+			fmt.Println("Error inserting order details:", err)
+			return nil, err
+		}
+	}
+
 	// Truy vấn lại để lấy thông tin chi tiết đơn hàng đã được thêm vào
-	err = db.Raw("SELECT * FROM OrderDetails WHERE order_id = ?", requestParams.Order_id).Scan(&orderDetails).Error
+	err = db.Raw("SELECT * FROM OrderDetails WHERE order_id = ?", requestParams.ID).Scan(&orderDetails).Error
 	if err != nil {
 		fmt.Println("Error fetching created order details:", err)
 		return nil, err
