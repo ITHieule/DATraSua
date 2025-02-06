@@ -17,6 +17,5 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	router.GET("/Getsweetness", controllers.Sweetness.GetSweetness)
 
 	router.POST("/createOrder", controllers.Order.CreateOrder)
-	router.POST("/createOrderDetails", controllers.OrderDetails.CreateOrderDetails)
 
 }
