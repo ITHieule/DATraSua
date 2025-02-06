@@ -7,9 +7,10 @@ type BaseSizesrequest struct {
 }
 
 type Basesrequest struct {
-	Id    int     `json:"id"`
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	Id     int     `json:"id"`
+	Name   string  `json:"name"`
+	Price  float64 `json:"price"`
+	Images string  `json:"images"`
 }
 
 type SizesRequest struct {
