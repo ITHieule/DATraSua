@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strings"
 	"web-api/internal/pkg/database"
 	"web-api/internal/pkg/models/request"
 )
@@ -245,16 +246,81 @@ func (s *CartService) UpdateCart(userID int, updatedCartItem *request.Cartreques
 		fmt.Println("Database connection error:", err)
 		return nil, err
 	}
-	// Kiểm tra dữ liệu đầu vào
 	dbInstance, _ := db.DB()
 	defer dbInstance.Close()
 
-	// Cập nhật thông tin giỏ hàng
-	query := `UPDATE Cart SET base_id = ?, size_id = ?, flavor_id = ?, sweetness_id = ?, ice_id = ?, extra_ids = ?, quantity = ?, price = ?
-			  WHERE user_id = ? AND id = ?`
+	// Truy vấn lấy giá Base và Size
+	baseAndSizeQuery := `
+        SELECT b.price AS base_price, s.price AS size_price
+        FROM BaseSizes bs
+        JOIN Bases b ON b.id = bs.base_id
+        JOIN Sizes s ON s.id = bs.size_id
+        WHERE bs.base_id = ? AND bs.size_id = ?
+    `
+	var price struct {
+		BasePrice float64 `json:"base_price"`
+		SizePrice float64 `json:"size_price"`
+	}
 
-	// Thực thi câu lệnh SQL UPDATE
-	result := db.Exec(query, updatedCartItem.BaseID, updatedCartItem.SizeID, updatedCartItem.FlavorID, updatedCartItem.SweetnessID, updatedCartItem.IceID, updatedCartItem.ExtraIDs, updatedCartItem.Quantity, updatedCartItem.Price, userID, updatedCartItem.ID)
+	err = db.Raw(baseAndSizeQuery, updatedCartItem.BaseID, updatedCartItem.SizeID).Scan(&price).Error
+	if err != nil {
+		fmt.Println("Error querying base and size prices:", err)
+		return nil, err
+	}
+
+	// Cập nhật giá Base và Size trong cartItem
+	updatedCartItem.Base.Price = price.BasePrice
+	updatedCartItem.Size.Price = price.SizePrice
+
+	// Truy vấn ExtraIDs từ bảng Cart
+	var extraIDs string
+	extraIDQuery := `SELECT extra_ids FROM Cart WHERE user_id = ? AND id = ?`
+	err = db.Raw(extraIDQuery, userID, updatedCartItem.ID).Scan(&extraIDs).Error
+	if err != nil {
+		fmt.Println("Error querying extra IDs from Cart:", err)
+		return nil, err
+	}
+
+	// Tách ExtraIDs thành danh sách các ID
+	var extraIDList []string
+	if extraIDs != "" {
+		extraIDList = strings.Split(extraIDs, ",")
+		fmt.Println("Extra ID List:", extraIDList) // Debugging line
+	}
+
+	// Truy vấn các phụ kiện từ cơ sở dữ liệu
+	var extraPrices []request.Extrasrequest
+	if len(extraIDList) > 0 {
+		// Truy vấn các phụ kiện từ bảng Extras
+		extraQuery := `SELECT id, name, price FROM Extras WHERE id IN (?)`
+		err = db.Raw(extraQuery, extraIDList).Scan(&extraPrices).Error
+		if err != nil {
+			fmt.Println("Error querying extra prices:", err)
+			return nil, err
+		}
+
+		// Debug: In danh sách giá phụ kiện
+		fmt.Println("Extras from DB:", extraPrices)
+
+		// Cập nhật các phụ kiện vào cartItem
+		updatedCartItem.Extras = extraPrices
+	}
+
+	// Tính toán giá trị tổng của giỏ hàng (base + size + extras)
+	totalExtraPrice := 0.0
+	for _, extra := range updatedCartItem.Extras {
+		totalExtraPrice += extra.Price
+	}
+
+	updatedCartItem.Price = updatedCartItem.Base.Price + updatedCartItem.Size.Price + totalExtraPrice
+
+	// Cập nhật giỏ hàng trong cơ sở dữ liệu
+	updateQuery := `
+        UPDATE Cart 
+        SET quantity = ?, price = ? 
+        WHERE user_id = ? AND id = ?
+    `
+	result := db.Exec(updateQuery, updatedCartItem.Quantity, updatedCartItem.Price, userID, updatedCartItem.ID)
 	if result.Error != nil {
 		fmt.Println("Error updating cart item:", result.Error)
 		return nil, result.Error
