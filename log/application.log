@@ -16,14 +16,32 @@
 [GIN-debug] GET    /api/v1/rp/admin/rptypes  --> web-api/internal/api/controllers.(*AdminController).GetRPTypes-fm (4 handlers)
 [GIN-debug] GET    /api/v1/rp/admin/excelbydepartments --> web-api/internal/api/controllers.(*AdminController).ExcelByDepartments-fm (4 handlers)
 [GIN-debug] GET    /api/v1/rp/admin/excelbyreporttypes --> web-api/internal/api/controllers.(*AdminController).ExcelByReportTypes-fm (4 handlers)
-[GIN-debug] POST   /api/v1/System/register   --> web-api/internal/api/controllers.(*OrderController).Register-fm (4 handlers)
-[GIN-debug] POST   /api/v1/System/Login      --> web-api/internal/api/controllers.(*OrderController).Login-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/register   --> web-api/internal/api/controllers.(*UserController).Register-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/Login      --> web-api/internal/api/controllers.(*UserController).Login-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/Getbases   --> web-api/internal/api/controllers.(*BaseseController).Getbasese-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/Addbases   --> web-api/internal/api/controllers.(*BaseseController).Addbases-fm (4 handlers)
+[GIN-debug] PUT    /api/v1/System/Updatebases --> web-api/internal/api/controllers.(*BaseseController).Updatebases-fm (4 handlers)
+[GIN-debug] DELETE /api/v1/System/Deletebases --> web-api/internal/api/controllers.(*BaseseController).Deletebases-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/Searchbases --> web-api/internal/api/controllers.(*BaseseController).Searchbases-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/Getsize    --> web-api/internal/api/controllers.(*SizesController).GetSizes-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/Addsize    --> web-api/internal/api/controllers.(*SizesController).AddSizes-fm (4 handlers)
+[GIN-debug] PUT    /api/v1/System/Updatesize --> web-api/internal/api/controllers.(*SizesController).Updatesize-fm (4 handlers)
+[GIN-debug] DELETE /api/v1/System/Deletesize --> web-api/internal/api/controllers.(*SizesController).Deletesize-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/Searchsize --> web-api/internal/api/controllers.(*SizesController).Searchsize-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/Getflavors --> web-api/internal/api/controllers.(*FlavorsController).GetFlavors-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/Addflavors --> web-api/internal/api/controllers.(*FlavorsController).Addflavors-fm (4 handlers)
+[GIN-debug] PUT    /api/v1/System/Updateflavors --> web-api/internal/api/controllers.(*FlavorsController).Updateflavors-fm (4 handlers)
+[GIN-debug] DELETE /api/v1/System/Deleteflavors --> web-api/internal/api/controllers.(*FlavorsController).Deleteflavors-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/GeticeLevels --> web-api/internal/api/controllers.(*IceLevelsController).GetIceLevels-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/Getsweetness --> web-api/internal/api/controllers.(*SweetnessController).GetSweetness-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/GetBaseSizes --> web-api/internal/api/controllers.(*BaseSizesController).GetBaseSizes-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/BaseSizes  --> web-api/internal/api/controllers.(*BaseSizesController).AddBaseSizes-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/createOrder --> web-api/internal/api/controllers.(*OrderController).CreateOrder-fm (4 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8081
-::1 - - [05/Feb/2025:12:47:35 +0700] "POST /api/v1/System/register HTTP/1.1 200 512.8271ms " " PostmanRuntime/7.43.0" " "
-::1 - - [05/Feb/2025:12:47:56 +0700] "POST /api/v1/System/Login HTTP/1.1 200 60.4489ms " " PostmanRuntime/7.43.0" " "
-::1 - - [05/Feb/2025:12:48:43 +0700] "POST /api/v1/System/register HTTP/1.1 200 71.1882ms " " PostmanRuntime/7.43.0" " "
-::1 - - [05/Feb/2025:12:49:04 +0700] "POST /api/v1/System/Login HTTP/1.1 200 21.6532ms " " PostmanRuntime/7.43.0" " "
-::1 - - [05/Feb/2025:12:49:15 +0700] "POST /api/v1/System/Login HTTP/1.1 400 0s " " PostmanRuntime/7.43.0" " "
-::1 - - [05/Feb/2025:12:49:20 +0700] "POST /api/v1/System/Login HTTP/1.1 200 70.6198ms " " PostmanRuntime/7.43.0" " "
+::1 - - [06/Feb/2025:14:03:27 +0700] "POST /api/v1/System/Addbases HTTP/1.1 200 9.5116ms " " PostmanRuntime/7.43.0" " "
+::1 - - [06/Feb/2025:14:04:05 +0700] "POST /api/v1/System/Updatebases HTTP/1.1 404 0s " " PostmanRuntime/7.43.0" " "
+::1 - - [06/Feb/2025:14:04:11 +0700] "PUT /api/v1/System/Updatebases HTTP/1.1 200 13.0512ms " " PostmanRuntime/7.43.0" " "
+::1 - - [06/Feb/2025:14:04:29 +0700] "PUT /api/v1/System/Updatebases HTTP/1.1 200 10.6331ms " " PostmanRuntime/7.43.0" " "
+::1 - - [06/Feb/2025:14:04:53 +0700] "POST /api/v1/System/Searchbases HTTP/1.1 200 9.5036ms " " PostmanRuntime/7.43.0" " "

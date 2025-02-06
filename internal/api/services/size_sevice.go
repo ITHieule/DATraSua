@@ -127,11 +127,11 @@ func (s *SizeService) DeleteSizesesSevice(Id int) error {
 
 	// Kiểm tra số dòng bị ảnh hưởng (nếu ID không tồn tại, sẽ không xóa được)
 	if result.RowsAffected == 0 {
-		fmt.Println("No book found with ID:", Id)
-		return fmt.Errorf("không tìm thấy sách với ID %d", Id)
+		fmt.Println("No Size found with ID:", Id)
+		return fmt.Errorf("không tìm thấy Size với ID %d", Id)
 	}
 
-	fmt.Println("Deleted book successfully!")
+	fmt.Println("Deleted Size successfully!")
 	return nil
 }
 

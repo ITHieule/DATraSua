@@ -43,3 +43,52 @@
 
 2025/02/05 12:49:20 D:/DA/internal/api/services/userservice.go:70
 [8.091ms] [rows:1] SELECT * FROM Users WHERE Username = 'Le'
+
+2025/02/06 13:21:10 D:/DA/internal/api/services/Flavors_sevice.go:66
+[2.476ms] [rows:1] 
+		 INSERT INTO Flavors (
+          name
+        ) VALUES ('matcha')
+
+	
+
+2025/02/06 13:28:52 D:/DA/internal/api/services/Flavors_sevice.go:95
+[3.943ms] [rows:0] 
+    UPDATE Flavors
+    SET name = 'matchalate'
+    WHERE id = 0
+
+2025/02/06 13:29:35 D:/DA/internal/api/services/Flavors_sevice.go:95
+[3.955ms] [rows:1] 
+    UPDATE Flavors
+    SET name = 'matchalate'
+    WHERE id = 8
+
+2025/02/06 13:36:31 D:/DA/internal/api/services/Flavors_sevice.go:119
+[1.298ms] [rows:0] DELETE FROM Sizes WHERE id = 8
+
+2025/02/06 13:37:13 D:/DA/internal/api/services/Flavors_sevice.go:119
+[4.984ms] [rows:1] DELETE FROM Flavors WHERE id = 8
+
+2025/02/06 14:03:27 D:/DA/internal/api/services/basesorder.go:66
+[5.235ms] [rows:1] 
+		 INSERT INTO Bases (
+          name,price
+        ) VALUES ('Trà Vải', '35000')
+
+	
+
+2025/02/06 14:04:11 D:/DA/internal/api/services/basesorder.go:95
+[6.556ms] [rows:1] 
+    UPDATE Bases
+    SET name = 'Trà Vải', price = '3500'
+    WHERE id = 7
+
+2025/02/06 14:04:29 D:/DA/internal/api/services/basesorder.go:95
+[6.364ms] [rows:1] 
+    UPDATE Bases
+    SET name = 'Trà Vải', price = '35000'
+    WHERE id = 7
+
+2025/02/06 14:04:53 D:/DA/internal/api/services/basesorder.go:157
+[1.442ms] [rows:1] SELECT * FROM Bases WHERE name = 'Trà Vải' OR price = '35000' OR id = 7

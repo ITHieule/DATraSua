@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 	"web-api/internal/pkg/database"
+	"web-api/internal/pkg/models/request"
 	"web-api/internal/pkg/models/types"
 )
 
@@ -38,4 +39,125 @@ func (s *BasesService) BasesSevice() ([]types.Basestypes, error) {
 		return nil, err
 	}
 	return orders, nil
+}
+
+func (s *BasesService) AddbasesSevice(requestParams *request.Basesrequest) ([]types.Basestypes, error) {
+	var Sizes []types.Basestypes
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
+	query := `
+		 INSERT INTO Bases (
+          name,price
+        ) VALUES (?, ?)
+
+	`
+
+	// Truyền tham số vào câu truy vấn
+	err = db.Exec(query,
+		requestParams.Name,
+		requestParams.Price,
+	).Error
+	if err != nil {
+		fmt.Println("Query execution error:", err)
+		return nil, err
+	}
+	return Sizes, nil
+}
+func (s *BasesService) UpdatebasesSevice(requestParams *request.Basesrequest) ([]types.Basestypes, error) {
+	var Sizes []types.Basestypes
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
+	query := `
+    UPDATE Bases
+    SET name = ?, price = ?
+    WHERE id = ?
+`
+	err = db.Exec(query,
+		requestParams.Name,
+		requestParams.Price,
+		requestParams.Id,
+	).Error
+	if err != nil {
+		fmt.Println("Query execution error:", err)
+		return nil, err
+	}
+	return Sizes, nil
+}
+
+func (s *BasesService) DeletebasesSevice(Id int) error {
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+
+		return err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Thực thi lệnh DELETE
+	result := db.Exec("DELETE FROM Bases WHERE id = ?", Id)
+
+	// Kiểm tra lỗi truy vấn
+	if result.Error != nil {
+		fmt.Println("Query execution error:", result.Error)
+		return result.Error
+	}
+
+	// Kiểm tra số dòng bị ảnh hưởng (nếu ID không tồn tại, sẽ không xóa được)
+	if result.RowsAffected == 0 {
+		fmt.Println("No Bases found with ID:", Id)
+		return fmt.Errorf("không tìm thấy Bases với ID %d", Id)
+	}
+
+	fmt.Println("Deleted Bases successfully!")
+	return nil
+}
+
+func (s *BasesService) SearchbasesSevice(requestParams *request.Basesrequest) ([]types.Basestypes, error) {
+	var Sizes []types.Basestypes
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
+
+	err = db.Raw("SELECT * FROM Bases WHERE name = ? OR price = ? OR id = ?",
+		requestParams.Name,
+		requestParams.Price,
+		requestParams.Id,
+	).Scan(&Sizes).Error
+	if err != nil {
+		fmt.Println("Query execution error:", err)
+		return nil, err
+	}
+	return Sizes, nil
 }
