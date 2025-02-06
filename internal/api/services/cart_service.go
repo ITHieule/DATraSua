@@ -131,8 +131,8 @@ func (s *CartService) calculateTotalPrice(cart *request.Cartrequest) {
 	fmt.Printf("Total price after calculation: %.2f\n", cart.Price)
 }
 
-func (s *CartService) GetCart(userID int) (*request.Cartrequest, error) {
-	var cart request.Cartrequest
+func (s *CartService) GetCart(userID int) ([]request.Cartrequest, error) {
+	var carts []request.Cartrequest
 
 	// Kết nối cơ sở dữ liệu
 	db, err := database.DB1Connection()
@@ -147,12 +147,12 @@ func (s *CartService) GetCart(userID int) (*request.Cartrequest, error) {
 	// Truy vấn lấy thông tin giỏ hàng với dữ liệu chi tiết (JOIN)
 	query := `
 	SELECT c.id, c.user_id, c.base_id, c.size_id, c.flavor_id, c.sweetness_id, c.ice_id, c.extra_ids, c.quantity, c.price,
-		   b.name AS BaseName, b.price AS BasePrice,
-		   s.name AS SizeName, s.price AS SizePrice,
-		   f.name AS FlavorName,
-		   t.name AS SweetnessName,
-		   i.name AS IceName,
-		   e.id AS ExtraID, e.name AS ExtraName, e.price AS ExtraPrice
+	       b.name AS BaseName, b.price AS BasePrice,
+	       s.name AS SizeName, s.price AS SizePrice,
+	       f.name AS FlavorName,
+	       t.name AS SweetnessName,
+	       i.name AS IceName,
+	       e.id AS ExtraID, e.name AS ExtraName, e.price AS ExtraPrice
 	FROM Cart c
 	LEFT JOIN Bases b ON c.base_id = b.id
 	LEFT JOIN Sizes s ON c.size_id = s.id
@@ -163,66 +163,78 @@ func (s *CartService) GetCart(userID int) (*request.Cartrequest, error) {
 	WHERE c.user_id = ?
 	`
 
-	// Thực hiện câu lệnh query
+	// Thực hiện câu lệnh query để lấy tất cả giỏ hàng
 	var cartDetails []request.CartDetails
 	err = db.Raw(query, userID).Scan(&cartDetails).Error
 	if err != nil {
 		fmt.Println("Query execution error:", err)
-		return nil, fmt.Errorf("Error retrieving cart: %w", err)
+		return nil, fmt.Errorf("Error retrieving carts: %w", err)
 	}
 
-	// Nếu có kết quả, ánh xạ kết quả vào cart
-	if len(cartDetails) > 0 {
-		cart.ID = cartDetails[0].ID
-		cart.UserID = cartDetails[0].UserID
-		cart.BaseID = cartDetails[0].BaseID
-		cart.SizeID = cartDetails[0].SizeID
-		cart.FlavorID = cartDetails[0].FlavorID
-		cart.SweetnessID = cartDetails[0].SweetnessID
-		cart.IceID = cartDetails[0].IceID
-		cart.ExtraIDs = cartDetails[0].ExtraIDs
-		cart.Quantity = cartDetails[0].Quantity
-		cart.Price = cartDetails[0].Price // Nếu Price có giá trị riêng biệt từ query, có thể giữ lại
+	// Dùng map để lọc các giỏ hàng không bị lặp
+	seen := make(map[int]bool)
+	for _, cartDetail := range cartDetails {
+		// Kiểm tra xem giỏ hàng đã có chưa
+		if _, exists := seen[cartDetail.ID]; !exists {
+			seen[cartDetail.ID] = true
 
-		cart.Base = request.Basesrequest{
-			Id:    cart.BaseID,
-			Name:  cartDetails[0].BaseName,
-			Price: cartDetails[0].BasePrice,
-		}
-		cart.Size = request.SizesRequest{
-			ID:    cart.SizeID,
-			Name:  cartDetails[0].SizeName,
-			Price: cartDetails[0].SizePrice,
-		}
-		cart.Flavor = request.Flavorsrequest{
-			Id:   cart.FlavorID,
-			Name: cartDetails[0].FlavorName,
-		}
-		cart.Sweetness = request.Sweetnessrequest{
-			Id:   cart.SweetnessID,
-			Name: cartDetails[0].SweetnessName,
-		}
-		cart.Ice = request.IceLevelsrequest{
-			Id:   cart.IceID,
-			Name: cartDetails[0].IceName,
-		}
+			var cart request.Cartrequest
+			cart.ID = cartDetail.ID
+			cart.UserID = cartDetail.UserID
+			cart.BaseID = cartDetail.BaseID
+			cart.SizeID = cartDetail.SizeID
+			cart.FlavorID = cartDetail.FlavorID
+			cart.SweetnessID = cartDetail.SweetnessID
+			cart.IceID = cartDetail.IceID
+			cart.ExtraIDs = cartDetail.ExtraIDs
+			cart.Quantity = cartDetail.Quantity
+			cart.Price = cartDetail.Price
 
-		// Lấy danh sách các phụ kiện (Extras)
-		var extras []request.Extrasrequest
-		if cart.ExtraIDs != "" {
-			err = db.Raw("SELECT * FROM Extras WHERE FIND_IN_SET(id, ?)", cart.ExtraIDs).Scan(&extras).Error
-			if err != nil {
-				fmt.Println("Error fetching extras:", err)
-				return nil, fmt.Errorf("Error retrieving extras: %w", err)
+			cart.Base = request.Basesrequest{
+				Id:    cart.BaseID,
+				Name:  cartDetail.BaseName,
+				Price: cartDetail.BasePrice,
 			}
-			cart.Extras = extras
+			cart.Size = request.SizesRequest{
+				ID:    cart.SizeID,
+				Name:  cartDetail.SizeName,
+				Price: cartDetail.SizePrice,
+			}
+			cart.Flavor = request.Flavorsrequest{
+				Id:   cart.FlavorID,
+				Name: cartDetail.FlavorName,
+			}
+			cart.Sweetness = request.Sweetnessrequest{
+				Id:   cart.SweetnessID,
+				Name: cartDetail.SweetnessName,
+			}
+			cart.Ice = request.IceLevelsrequest{
+				Id:   cart.IceID,
+				Name: cartDetail.IceName,
+			}
+
+			// Lấy danh sách các phụ kiện (Extras)
+			var extras []request.Extrasrequest
+			if cart.ExtraIDs != "" {
+				err = db.Raw("SELECT * FROM Extras WHERE FIND_IN_SET(id, ?)", cart.ExtraIDs).Scan(&extras).Error
+				if err != nil {
+					fmt.Println("Error fetching extras:", err)
+					return nil, fmt.Errorf("Error retrieving extras: %w", err)
+				}
+				cart.Extras = extras
+			}
+
+			// Thêm giỏ hàng vào danh sách
+			carts = append(carts, cart)
 		}
 	}
 
-	// Tính toán tổng giá trị giỏ hàng
-	s.calculateTotalPrice(&cart)
+	// Tính toán tổng giá trị giỏ hàng cho mỗi giỏ
+	for i := range carts {
+		s.calculateTotalPrice(&carts[i])
+	}
 
-	return &cart, nil
+	return carts, nil
 }
 
 // UpdateCart cập nhật thông tin giỏ hàng
