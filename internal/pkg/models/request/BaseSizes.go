@@ -5,3 +5,15 @@ type BaseSizesrequest struct {
 	Base_id int `json:"base_id"`
 	Size_id int `json:"size_id"`
 }
+
+type Basesrequest struct {
+	Id    int     `json:"id"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+}
+
+type SizesRequest struct {
+	ID    int     `json:"id"`
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+}

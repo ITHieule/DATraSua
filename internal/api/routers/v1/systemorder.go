@@ -34,6 +34,14 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	router.GET("/GetBaseSizes", controllers.BaseSizes.GetBaseSizes)
 	router.POST("/BaseSizes", controllers.BaseSizes.AddBaseSizes)
 
+	//Router order
 	router.POST("/createOrder", controllers.Order.CreateOrder)
+	router.GET("/orders/:order_id/details", controllers.Order.GetOrderWithDetails)
+	router.PUT("/orders/:order_id/cancel", controllers.Order.CancelOrder)
 
+	//router cart
+	router.GET("/cart/:userID", controllers.NewCartController().GetCart)
+	router.POST("/cart/:userID", controllers.NewCartController().AddToCart)
+	router.PUT("/cart/:userID/:cartItemID", controllers.NewCartController().UpdateCart)
+	router.DELETE("/cart/:userID/:cartItemID", controllers.NewCartController().RemoveFromCart)
 }
