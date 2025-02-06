@@ -33,6 +33,9 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 
 	router.GET("/GetBaseSizes", controllers.BaseSizes.GetBaseSizes)
 	router.POST("/BaseSizes", controllers.BaseSizes.AddBaseSizes)
+	router.PUT("/UpdateBaseSizes", controllers.BaseSizes.UpdateBaseSizes)
+	router.DELETE("/DeleteBaseSizes", controllers.BaseSizes.DeleteBaseSizes)
+	router.POST("/SearchBaseSizes", controllers.BaseSizes.SearchBaseSizes)
 
 	//Router order
 	router.POST("/createOrder", controllers.Order.CreateOrder)

@@ -38,3 +38,46 @@ func (c *BaseSizesController) GetBaseSizes(ctx *gin.Context) {
 	}
 	response.OkWithData(ctx, result)
 }
+func (c *BaseSizesController) UpdateBaseSizes(ctx *gin.Context) {
+	var requestParams request.BaseSizesrequest
+
+	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
+		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	result, err := services.OrderBaseSizes.UpdateBaseSizesSevice(&requestParams)
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, result)
+}
+
+func (c *BaseSizesController) DeleteBaseSizes(ctx *gin.Context) {
+	var requestParams request.BaseSizesrequest
+
+	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
+		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	err := services.OrderBaseSizes.DeleteBaseSizesSevice(requestParams.Id)
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, nil)
+}
+func (c *BaseSizesController) SearchBaseSizes(ctx *gin.Context) {
+	var requestParams request.BaseSizesrequest
+
+	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
+		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	result, err := services.OrderBaseSizes.SearchBaseSizes(&requestParams)
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, result)
+}
