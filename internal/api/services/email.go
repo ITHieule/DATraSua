@@ -9,6 +9,12 @@ import (
 	"github.com/spf13/viper"
 )
 
+type EmailService struct {
+	*BaseService
+}
+
+var Email = &EmailService{}
+
 // Hàm gửi email
 func SendEmail(to string, subject string, body string) error {
 

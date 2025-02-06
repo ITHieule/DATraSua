@@ -6,3 +6,12 @@ type OrderTypes struct {
 	OrderDate string `json:"order_date"`
 	Status    string `json:"status"`
 }
+
+type OrdersTypes struct {
+	Order_id      uint   `json:"id" gorm:"primaryKey"`
+	BasesName     string `json:"basesname"`
+	FlavorsName   string `json:"flavorsName"`
+	SweetnessName string `json:"sweetnessName"`
+	IceLevelsName string `json:"iceLevelsName"`
+	SizeName      string `json:"sizeName"`
+}

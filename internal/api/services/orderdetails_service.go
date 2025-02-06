@@ -2,6 +2,7 @@ package services
 
 import (
 	"fmt"
+	"strings"
 	"web-api/internal/pkg/database"
 	"web-api/internal/pkg/models/request"
 	"web-api/internal/pkg/models/types"
@@ -124,6 +125,53 @@ func (s *OrderDetailsService) Create(requestParams *request.OrderRequest) ([]typ
 		return nil, err
 	}
 
+	var user types.Usertypes
+	err = db.Raw("SELECT * FROM Users WHERE id = ?", requestParams.UserID).Scan(&user).Error
+	if err != nil {
+		fmt.Println("Error fetching created order details:", err)
+		return nil, err
+	}
+
+	var order []types.OrdersTypes
+	err = db.Raw(`
+	
+	SELECT OrderDetails.order_id,Bases.name as 'BasesName', Flavors.name  as 'FlavorsName',Sweetness.name  as 'SweetnessName',IceLevels.name  as 'IceLevelsName',Sizes.name  as 'SizeName'  FROM OrderSystem.OrderDetails
+	join Bases on OrderDetails.base_id = Bases.id
+	join Flavors on OrderDetails.flavor_id = Flavors.id
+	join Sweetness on OrderDetails.sweetness_id = Sweetness.id
+	join IceLevels on OrderDetails.ice_id = IceLevels.id
+	join Sizes on OrderDetails.size_id = Sizes.id
+	where OrderDetails.order_id = ?
+	`, requestParams.ID).Scan(&order).Error
+	if err != nil {
+		fmt.Println("Error fetching created order details:", err)
+		return nil, err
+	}
+
+	body := formatOrderEmailContent(requestParams.ID, order)
+
+	SendEmail(user.Email, "Đơn hàng", body)
+
 	// Trả về chi tiết đơn hàng vừa tạo
 	return orderDetails, nil
+}
+
+func formatOrderEmailContent(orderID uint, details []types.OrdersTypes) string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("Chào bạn,\n\nĐơn hàng #%d của bạn đã được đặt thành công.\n\n", orderID))
+	sb.WriteString("📌 *Chi tiết đơn hàng:*\n\n")
+
+	for _, item := range details {
+		sb.WriteString(fmt.Sprintf(
+			"- 🍵 Tên món: %s\n  🌿 Hương vị: %s\n  🍯 Độ ngọt: %s\n  ❄️ Mức đá: %s\n  📏 Kích thước: %s\n\n",
+			item.BasesName,     // Ví dụ: "Trà Đào"
+			item.FlavorsName,   // Ví dụ: "Vani"
+			item.SweetnessName, // Ví dụ: "Ít ngọt"
+			item.IceLevelsName, // Ví dụ: "Ít đá"
+			item.SizeName,      // Ví dụ: "Vừa"
+		))
+	}
+
+	sb.WriteString("🎉 Cảm ơn bạn đã mua hàng!\n")
+	return sb.String()
 }
