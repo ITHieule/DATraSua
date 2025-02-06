@@ -29,3 +29,12 @@ func (c *BaseSizesController) AddBaseSizes(ctx *gin.Context) {
 	}
 	response.OkWithData(ctx, result)
 }
+
+func (c *BaseSizesController) GetBaseSizes(ctx *gin.Context) {
+	result, err := services.OrderBaseSizes.GetBaseSizesSevice()
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, result)
+}

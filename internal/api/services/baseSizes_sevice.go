@@ -45,3 +45,31 @@ func (s *BaseSizesService) BaseSizesSevice(requestParams *request.BaseSizesreque
 	}
 	return BaseSizes, nil
 }
+
+func (s *BaseSizesService) GetBaseSizesSevice() ([]types.BaseSizestypes, error) {
+	var BaseSizes []types.BaseSizestypes
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
+	query := `
+	SELECT * FROM OrderSystem.BaseSizes 
+
+`
+
+	// Thực hiện truy vấn và ánh xạ kết quả vào struct
+	err = db.Raw(query).Scan(&BaseSizes).Error
+	if err != nil {
+		fmt.Println("Query execution error:", err)
+		return nil, err
+	}
+	return BaseSizes, nil
+}
