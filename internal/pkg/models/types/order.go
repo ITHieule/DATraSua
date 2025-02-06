@@ -6,3 +6,9 @@ type OrderTypes struct {
 	OrderDate string `json:"order_date"`
 	Status    string `json:"status"`
 }
+
+// Cấu trúc chứa thông tin đơn hàng và chi tiết đơn hàng
+type OrderWithDetails struct {
+	Order        OrderTypes          `json:"order"`
+	OrderDetails []OrderDetailsTypes `json:"order_details"`
+}
