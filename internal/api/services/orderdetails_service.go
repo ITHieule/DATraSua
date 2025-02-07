@@ -198,31 +198,6 @@ func (s *OrderDetailsService) GetOrderWithDetails(orderID int) (types.OrderWithD
 	}, nil
 }
 
-// Hàm hủy đơn hàng (set trạng thái thành "Đã hủy")
-func (s *OrderService) CancelOrder(orderID int) error {
-	// Kết nối cơ sở dữ liệu
-	db, err := database.DB1Connection()
-	if err != nil {
-		return fmt.Errorf("Database connection error: %v", err)
-	}
-	// Đảm bảo đóng kết nối sau khi hoàn thành
-	dbInstance, _ := db.DB()
-	defer dbInstance.Close()
-
-	// Cập nhật trạng thái đơn hàng thành "Đã hủy"
-	query := "UPDATE Orders SET status = ? WHERE id = ?"
-	res := db.Exec(query, "Đã hủy", orderID)
-	if res.Error != nil {
-		return fmt.Errorf("Error updating order status: %v", res.Error)
-	}
-
-	// Kiểm tra nếu không có đơn hàng nào bị ảnh hưởng
-	if res.RowsAffected == 0 {
-		return fmt.Errorf("Order with id %d not found", orderID)
-	}
-
-	return nil
-}
 func formatOrderEmailContent(orderID uint, details []types.OrdersTypes) string {
 	var sb strings.Builder
 	sb.WriteString(fmt.Sprintf("Chào bạn,\n\nĐơn hàng #%d của bạn đã được đặt thành công.\n\n", orderID))

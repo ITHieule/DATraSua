@@ -104,3 +104,103 @@ func (s *OrderService) PlaceOrder(userID int) (*request.OrderRequest, error) {
 	order.OrderDetails = orderDetails
 	return &order, nil
 }
+
+func (s *OrderService) GetOrderDetailsByOrderID(orderID int) ([]request.OrderDetailsRequest, error) {
+	db, err := database.DB1Connection()
+	if err != nil {
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// 🔹 Truy vấn danh sách OrderDetails theo orderID
+	var orderDetails []request.OrderDetailsRequest
+	err = db.Where("order_id = ?", orderID).Find(&orderDetails).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// 🔹 Debug danh sách trả về
+	fmt.Printf("Order ID: %d, Details: %+v\n", orderID, orderDetails)
+
+	return orderDetails, nil
+}
+
+func (s *OrderService) GetOrdersByUserID(userID int) ([]request.OrderRequest, error) {
+	db, err := database.DB1Connection()
+	if err != nil {
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// 📌 Truy vấn danh sách đơn hàng theo UserID
+	var orders []request.OrderRequest
+	err = db.Where("user_id = ?", userID).Find(&orders).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// 📌 Lặp qua từng đơn hàng để lấy danh sách OrderDetails
+	for i := range orders {
+		var orderDetails []request.OrderDetailsRequest
+		err := db.Where("order_id = ?", orders[i].ID).Find(&orderDetails).Error
+		if err != nil {
+			return nil, err
+		}
+		orders[i].OrderDetails = orderDetails
+	}
+
+	return orders, nil
+}
+
+func (s *OrderService) CancelOrder(orderID int) error {
+	db, err := database.DB1Connection()
+	if err != nil {
+		return err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// 📌 Kiểm tra đơn hàng có tồn tại không
+	var order request.OrderRequest
+	err = db.Where("id = ?", orderID).First(&order).Error
+	if err != nil {
+		return err
+	}
+
+	// 📌 Cập nhật trạng thái đơn hàng thành "Đã hủy"
+	order.Status = "Đã hủy"
+	err = db.Save(&order).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// 📌 Cập nhật trạng thái đơn hàng
+func (s *OrderService) UpdateOrderStatus(orderID int, status string) error {
+	db, err := database.DB1Connection()
+	if err != nil {
+		return err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// 📌 Kiểm tra đơn hàng có tồn tại không
+	var order request.OrderRequest
+	err = db.Where("id = ?", orderID).First(&order).Error
+	if err != nil {
+		return err
+	}
+
+	// 📌 Cập nhật trạng thái đơn hàng
+	order.Status = status
+	err = db.Save(&order).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
