@@ -9,3 +9,7 @@ type User struct {
 	Role          string `json:"role"`
 	Is_verified   bool   `json:"is_verified"`
 }
+type AdminSuper struct {
+	Username      string `json:"username"`
+	Password_hash string `json:"password_hash"`
+}
