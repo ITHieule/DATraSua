@@ -2,11 +2,12 @@ package services
 
 import (
 	"fmt"
-	"golang.org/x/crypto/bcrypt"
 	"web-api/internal/api/until"
 	"web-api/internal/pkg/database"
 	"web-api/internal/pkg/models/request"
 	"web-api/internal/pkg/models/types"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -80,7 +81,7 @@ func (s *UserService) Login(requestParams *request.User) (string, error) {
 	}
 
 	// Tạo JWT token
-	token, err := until.GenerateJWT(user.Id)
+	token, err := until.GenerateJWT(user.Id, user.Role)
 	if err != nil {
 		fmt.Println("Error generating token:", err)
 		return token, nil

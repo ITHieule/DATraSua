@@ -7,9 +7,10 @@ type BaseSizestypes struct {
 }
 
 type Basestypes struct {
-	Id    int     `json:"id"`
-	Name  string  `json:"name"`
-	Price float64 `json:"price"`
+	Id     int     `json:"id"`
+	Name   string  `json:"name"`
+	Price  float64 `json:"price"`
+	Images string  `json: "images"`
 }
 
 type SizesTypes struct {
