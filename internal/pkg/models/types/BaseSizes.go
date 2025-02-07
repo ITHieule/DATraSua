@@ -1,7 +1,5 @@
 package types
 
-import "mime/multipart"
-
 type BaseSizestypes struct {
 	Id      int `json:"id"`
 	Base_id int `json:"base_id"`
@@ -9,10 +7,10 @@ type BaseSizestypes struct {
 }
 
 type Basestypes struct {
-	Id     int                   `json:"id"`
-	Name   string                `json:"name"`
-	Price  float64               `json:"price"`
-	Images *multipart.FileHeader `json: "images"`
+	Id     int     `json:"id"`
+	Name   string  `json:"name"`
+	Price  float64 `json:"price"`
+	Images string  `json: "images"`
 }
 
 type SizesTypes struct {
