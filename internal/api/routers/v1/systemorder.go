@@ -41,18 +41,22 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	router.POST("/SearchBaseSizes", controllers.BaseSizes.SearchBaseSizes)
 
 	//Router order
-	router.POST("/order/:userID", controllers.NewOrderController().PlaceOrder)               //checkout
-	router.GET("/orders/:orderID/details", controllers.NewOrderController().GetOrderDetails) //lấy OrderDetails theo OrderID
-	router.GET("/users/:userID/orders", controllers.NewOrderController().GetOrdersByUserID)  //lấy tất cả đơn hàng theo UserID
+	router.POST("/order/:userID", controllers.NewOrderController().PlaceOrder)               //🚀 API: checkout
+	router.GET("/orders/:orderID/details", controllers.NewOrderController().GetOrderDetails) //🚀 API: lấy OrderDetails theo OrderID
+	router.GET("/users/:userID/orders", controllers.NewOrderController().GetOrdersByUserID)  //🚀 API: lấy tất cả đơn hàng theo UserID
 	router.PUT("/orders/:orderID/cancel", controllers.NewOrderController().CancelOrder)      // 🚀 API hủy đơn hàng
 
 	//router cart
-	router.GET("/cart/:userID", controllers.NewCartController().GetCart)                       //lấy giỏ hàng theo user Id
-	router.POST("/cart/:userID", controllers.NewCartController().AddToCart)                    // add to cart
-	router.PUT("/cart/:userID/:cartItemID", controllers.NewCartController().UpdateCart)        // update cart
-	router.DELETE("/cart/:userID/:cartItemID", controllers.NewCartController().RemoveFromCart) // xóa giỏ hàng theo userid và caarrt id
+	router.GET("/cart/:userID", controllers.NewCartController().GetCart)                       //🚀 API: lấy giỏ hàng theo user Id
+	router.POST("/cart/:userID", controllers.NewCartController().AddToCart)                    //🚀 API:  add to cart
+	router.PUT("/cart/:userID/:cartItemID", controllers.NewCartController().UpdateCart)        //🚀 API:  update cart
+	router.DELETE("/cart/:userID/:cartItemID", controllers.NewCartController().RemoveFromCart) //🚀 API:  xóa giỏ hàng theo userid và caarrt id
 
 	//router admin orders
 	router.GET("/admin/orders/status-list", controllers.NewAdminOrderController().GetOrderStatusList)    // 🚀 API: Lấy danh sách trạng thái đơn hàng
 	router.PUT("/admin/orders/:orderID/status", controllers.NewAdminOrderController().UpdateOrderStatus) // 🚀 API: Admin cập nhật trạng thái đơn hàng
+
+	//router tích hợp thanh toán vnpay
+	// Khởi tạo cấu hình VNPay
+	router.GET("/create_payment/:order_id", controllers.NewVNPayController().CreatePayment)
 }
