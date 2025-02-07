@@ -92,3 +92,21 @@
 
 2025/02/06 14:04:53 D:/DA/internal/api/services/basesorder.go:157
 [1.442ms] [rows:1] SELECT * FROM Bases WHERE name = 'Trà Vải' OR price = '35000' OR id = 7
+
+2025/02/07 09:29:37 D:/DA/internal/api/services/userservice.go:49
+[21.506ms] [rows:0] INSERT INTO Users (Username, Password_hash, Email,Phone,Role ,Is_verified) VALUES ('PhanHieuLe', '$2a$10$h7FDObeXuY5TI3O1vJn2juwgbGqvDhoI7IUHqSghHLb0kHyNzpSFK', 'test_user@example.com', '0849012345', 'USER', true)
+
+2025/02/07 09:30:05 D:/DA/internal/api/services/userservice.go:71
+[2.887ms] [rows:1] SELECT * FROM Users WHERE Username = 'PhanHieuLe'
+
+2025/02/07 09:41:43 D:/DA/internal/api/services/basesorder.go:40
+[3.382ms] [rows:7] 
+		SELECT * FROM OrderSystem.Bases 
+
+	
+
+2025/02/07 10:05:52 D:/DA/internal/api/services/userservice.go:77
+[2.681ms] [rows:3] 
+		SELECT * FROM OrderSystem.Users 
+
+	

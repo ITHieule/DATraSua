@@ -14,4 +14,7 @@ func Register(router *gin.Engine) {
 	RegisterAdminRouter(v1.Group("/rp/admin"))
 
 	RegisterOrderSystemRouter(v1.Group("/System"))
+	
+	RegisterAdminsSystemRouter(v1.Group("/Admin"))
+
 }

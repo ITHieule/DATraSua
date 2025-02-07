@@ -28,6 +28,22 @@ func (c *UserController) Register(ctx *gin.Context) {
 	response.OkWithData(ctx, result)
 }
 
+
+func (c *UserController) UpdateUsers(ctx *gin.Context) {
+	var requestParams request.User
+
+	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
+		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	result, err := services.User.UpdateUserSevice(&requestParams)
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, result)
+}
+
 func (c *UserController) Login(ctx *gin.Context) {
 	var requestParams request.User
 	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {

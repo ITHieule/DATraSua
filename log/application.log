@@ -17,6 +17,7 @@
 [GIN-debug] GET    /api/v1/rp/admin/excelbydepartments --> web-api/internal/api/controllers.(*AdminController).ExcelByDepartments-fm (4 handlers)
 [GIN-debug] GET    /api/v1/rp/admin/excelbyreporttypes --> web-api/internal/api/controllers.(*AdminController).ExcelByReportTypes-fm (4 handlers)
 [GIN-debug] POST   /api/v1/System/register   --> web-api/internal/api/controllers.(*UserController).Register-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/GetUsers   --> web-api/internal/api/controllers.(*UserController).GetUsers-fm (4 handlers)
 [GIN-debug] POST   /api/v1/System/Login      --> web-api/internal/api/controllers.(*UserController).Login-fm (4 handlers)
 [GIN-debug] GET    /api/v1/System/Getbases   --> web-api/internal/api/controllers.(*BaseseController).Getbasese-fm (4 handlers)
 [GIN-debug] POST   /api/v1/System/Addbases   --> web-api/internal/api/controllers.(*BaseseController).Addbases-fm (4 handlers)
@@ -36,12 +37,15 @@
 [GIN-debug] GET    /api/v1/System/Getsweetness --> web-api/internal/api/controllers.(*SweetnessController).GetSweetness-fm (4 handlers)
 [GIN-debug] GET    /api/v1/System/GetBaseSizes --> web-api/internal/api/controllers.(*BaseSizesController).GetBaseSizes-fm (4 handlers)
 [GIN-debug] POST   /api/v1/System/BaseSizes  --> web-api/internal/api/controllers.(*BaseSizesController).AddBaseSizes-fm (4 handlers)
-[GIN-debug] POST   /api/v1/System/createOrder --> web-api/internal/api/controllers.(*OrderController).CreateOrder-fm (4 handlers)
+[GIN-debug] PUT    /api/v1/System/UpdateBaseSizes --> web-api/internal/api/controllers.(*BaseSizesController).UpdateBaseSizes-fm (4 handlers)
+[GIN-debug] DELETE /api/v1/System/DeleteBaseSizes --> web-api/internal/api/controllers.(*BaseSizesController).DeleteBaseSizes-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/SearchBaseSizes --> web-api/internal/api/controllers.(*BaseSizesController).SearchBaseSizes-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/order/:userID --> web-api/internal/api/controllers.(*OrderController).PlaceOrder-fm (4 handlers)
+[GIN-debug] GET    /api/v1/System/cart/:userID --> web-api/internal/api/controllers.(*CartController).GetCart-fm (4 handlers)
+[GIN-debug] POST   /api/v1/System/cart/:userID --> web-api/internal/api/controllers.(*CartController).AddToCart-fm (4 handlers)
+[GIN-debug] PUT    /api/v1/System/cart/:userID/:cartItemID --> web-api/internal/api/controllers.(*CartController).UpdateCart-fm (4 handlers)
+[GIN-debug] DELETE /api/v1/System/cart/:userID/:cartItemID --> web-api/internal/api/controllers.(*CartController).RemoveFromCart-fm (4 handlers)
 [GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
 Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
 [GIN-debug] Listening and serving HTTP on :8081
-::1 - - [06/Feb/2025:14:03:27 +0700] "POST /api/v1/System/Addbases HTTP/1.1 200 9.5116ms " " PostmanRuntime/7.43.0" " "
-::1 - - [06/Feb/2025:14:04:05 +0700] "POST /api/v1/System/Updatebases HTTP/1.1 404 0s " " PostmanRuntime/7.43.0" " "
-::1 - - [06/Feb/2025:14:04:11 +0700] "PUT /api/v1/System/Updatebases HTTP/1.1 200 13.0512ms " " PostmanRuntime/7.43.0" " "
-::1 - - [06/Feb/2025:14:04:29 +0700] "PUT /api/v1/System/Updatebases HTTP/1.1 200 10.6331ms " " PostmanRuntime/7.43.0" " "
-::1 - - [06/Feb/2025:14:04:53 +0700] "POST /api/v1/System/Searchbases HTTP/1.1 200 9.5036ms " " PostmanRuntime/7.43.0" " "
+::1 - - [07/Feb/2025:10:05:52 +0700] "GET /api/v1/System/GetUsers HTTP/1.1 200 9.5892ms " " PostmanRuntime/7.43.0" " "

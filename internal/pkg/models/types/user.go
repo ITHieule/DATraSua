@@ -9,3 +9,10 @@ type Usertypes struct {
 	Role          string `json:"role"`
 	Is_verified   bool   `json:"is_verified"`
 }
+
+type AdminSuper struct {
+	Adminid       uint   `json:"adminid" form:"adminid"`
+	Username      string `json:"username" form:"username"`
+	Password_hash string `json:"password_hash" form:"password_hash"`
+	Role          string `json:"role"`
+}
