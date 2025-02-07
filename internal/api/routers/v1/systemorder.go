@@ -40,11 +40,16 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	//Router order
 	router.POST("/order/:userID", controllers.NewOrderController().PlaceOrder)               //checkout
 	router.GET("/orders/:orderID/details", controllers.NewOrderController().GetOrderDetails) //lấy OrderDetails theo OrderID
+	router.GET("/users/:userID/orders", controllers.NewOrderController().GetOrdersByUserID)  //lấy tất cả đơn hàng theo UserID
+	router.PUT("/orders/:orderID/cancel", controllers.NewOrderController().CancelOrder)      // 🚀 API hủy đơn hàng
 
 	//router cart
-	router.GET("/cart/:userID", controllers.NewCartController().GetCart)
-	router.POST("/cart/:userID", controllers.NewCartController().AddToCart)
-	router.PUT("/cart/:userID/:cartItemID", controllers.NewCartController().UpdateCart)
-	router.DELETE("/cart/:userID/:cartItemID", controllers.NewCartController().RemoveFromCart)
+	router.GET("/cart/:userID", controllers.NewCartController().GetCart)                       //lấy giỏ hàng theo user Id
+	router.POST("/cart/:userID", controllers.NewCartController().AddToCart)                    // add to cart
+	router.PUT("/cart/:userID/:cartItemID", controllers.NewCartController().UpdateCart)        // update cart
+	router.DELETE("/cart/:userID/:cartItemID", controllers.NewCartController().RemoveFromCart) // xóa giỏ hàng theo userid và caarrt id
 
+	//router admin orders
+	router.GET("/admin/orders/status-list", controllers.NewAdminOrderController().GetOrderStatusList)    // 🚀 API: Lấy danh sách trạng thái đơn hàng
+	router.PUT("/admin/orders/:orderID/status", controllers.NewAdminOrderController().UpdateOrderStatus) // 🚀 API: Admin cập nhật trạng thái đơn hàng
 }
