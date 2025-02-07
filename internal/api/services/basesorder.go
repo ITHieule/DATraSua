@@ -2,9 +2,13 @@ package services
 
 import (
 	"fmt"
+	"mime/multipart"
+	"os"
 	"web-api/internal/pkg/database"
 	"web-api/internal/pkg/models/request"
 	"web-api/internal/pkg/models/types"
+
+	"github.com/gin-gonic/gin"
 )
 
 type BasesService struct {
@@ -57,8 +61,8 @@ func (s *BasesService) AddbasesSevice(requestParams *request.Basesrequest) ([]ty
 	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
 	query := `
 		 INSERT INTO Bases (
-          name,price
-        ) VALUES (?, ?)
+          name,price,images
+        ) VALUES (?, ?, ?)
 
 	`
 
@@ -66,11 +70,13 @@ func (s *BasesService) AddbasesSevice(requestParams *request.Basesrequest) ([]ty
 	err = db.Exec(query,
 		requestParams.Name,
 		requestParams.Price,
+		requestParams.Images,
 	).Error
 	if err != nil {
 		fmt.Println("Query execution error:", err)
 		return nil, err
 	}
+
 	return Sizes, nil
 }
 func (s *BasesService) UpdatebasesSevice(requestParams *request.Basesrequest) ([]types.Basestypes, error) {
@@ -95,6 +101,7 @@ func (s *BasesService) UpdatebasesSevice(requestParams *request.Basesrequest) ([
 	err = db.Exec(query,
 		requestParams.Name,
 		requestParams.Price,
+		requestParams.Images,
 		requestParams.Id,
 	).Error
 	if err != nil {
@@ -150,9 +157,10 @@ func (s *BasesService) SearchbasesSevice(requestParams *request.Basesrequest) ([
 
 	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
 
-	err = db.Raw("SELECT * FROM Bases WHERE name = ? OR price = ? OR id = ?",
+	err = db.Raw("SELECT * FROM Bases WHERE name = ? OR price = ? OR images = ? OR id = ?",
 		requestParams.Name,
 		requestParams.Price,
+		requestParams.Images,
 		requestParams.Id,
 	).Scan(&Sizes).Error
 	if err != nil {
@@ -160,4 +168,18 @@ func (s *BasesService) SearchbasesSevice(requestParams *request.Basesrequest) ([
 		return nil, err
 	}
 	return Sizes, nil
+}
+
+func (s *BasesService) SaveImage(path string, file *multipart.FileHeader, ctx *gin.Context) (string, error) {
+	_, err := os.Stat(path)
+	if os.IsNotExist(err) {
+		if err := ctx.SaveUploadedFile(file, path); err != nil {
+			return "Không lưu được hình ảnh", err
+		}
+	} else if err != nil {
+		return err.Error(), err
+	} else {
+		return "File đã tồn tại", nil
+	}
+	return "OK", nil
 }
