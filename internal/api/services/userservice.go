@@ -82,6 +82,52 @@ func (s *UserService) GetUsersSevice() ([]types.Usertypes, error) {
 	return orders, nil
 }
 
+func (s *UserService) UpdateUserSevice(requestParams *request.User) ([]types.Usertypes, error) {
+	var Sizes []types.Usertypes
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Mã hóa mật khẩu nếu có thay đổi
+	var hashedPassword string
+	if requestParams.Password_hash != "" { // Kiểm tra nếu mật khẩu được cung cấp
+		hashedPassword, err = HashPassword(requestParams.Password_hash)
+		if err != nil {
+			fmt.Println("Password hashing error:", err)
+			return nil, err
+		}
+	}
+
+	// Truy vấn SQL cập nhật thông tin người dùng
+	query := `
+        UPDATE Users
+        SET password_hash = COALESCE(?, password_hash),
+            email = ?,
+            phone = ?
+        WHERE id = ?
+    `
+
+	err = db.Exec(query,
+		hashedPassword, // Mật khẩu đã mã hóa hoặc NULL để giữ nguyên
+		requestParams.Email,
+		requestParams.Phone,
+		requestParams.Id,
+	).Error
+
+	if err != nil {
+		fmt.Println("Query execution error:", err)
+		return nil, err
+	}
+
+	return Sizes, nil
+}
+
 func (s *UserService) Login(requestParams *request.User) (string, error) {
 	var user types.Usertypes
 
