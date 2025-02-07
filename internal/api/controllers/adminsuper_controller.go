@@ -24,20 +24,35 @@ func (c *AdminSuperController) GetUsers(ctx *gin.Context) {
 	response.OkWithData(ctx, result)
 }
 
-// func (c *AdminSuperController) UpdateAdmidsuper(ctx *gin.Context) {
-// 	var requestParams request.User
+func (c *AdminSuperController) UpdateAdmidsuper(ctx *gin.Context) {
+	var requestParams request.AdminSuper
 
-// 	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
-// 		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
-// 		return
-// 	}
-// 	result, err := services.User.UpdateUserSevice(&requestParams)
-// 	if err != nil {
-// 		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
-// 		return
-// 	}
-// 	response.OkWithData(ctx, result)
-// }
+	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
+		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	result, err := services.AdminSuper.UpdateAdmidsuperSevice(&requestParams)
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, result)
+}
+
+func (c *AdminSuperController) DeleteAdmidsuper(ctx *gin.Context) {
+	var requestParams request.AdminSuper
+
+	if err := c.ValidateReqParams(ctx, &requestParams); err != nil {
+		response.FailWithDetailed(ctx, http.StatusBadRequest, nil, err.Error())
+		return
+	}
+	err := services.AdminSuper.DeleteAdmidsuperSevice(requestParams.Id)
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, nil)
+}
 
 func (c *AdminSuperController) Loginadmin(ctx *gin.Context) {
 	var requestParams request.AdminSuper

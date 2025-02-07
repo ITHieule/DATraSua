@@ -14,4 +14,8 @@ func RegisterAdminsSystemRouter(router *gin.RouterGroup) {
 
 	router.GET("/GetUsers", controllers.AdminSuper.GetUsers)
 
+	router.PUT("/Updateadmin", controllers.AdminSuper.UpdateAdmidsuper)
+
+	router.DELETE("/Deleteadmin", controllers.AdminSuper.DeleteAdmidsuper)
+
 }
