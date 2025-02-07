@@ -27,6 +27,16 @@ func (c *UserController) Register(ctx *gin.Context) {
 	}
 	response.OkWithData(ctx, result)
 }
+func (c *UserController) GetUsers(ctx *gin.Context) {
+	result, err := services.User.GetUsersSevice()
+	if err != nil {
+		response.FailWithDetailed(ctx, http.StatusInternalServerError, nil, err.Error())
+		return
+	}
+	response.OkWithData(ctx, result)
+}
+
+
 
 func (c *UserController) Login(ctx *gin.Context) {
 	var requestParams request.User

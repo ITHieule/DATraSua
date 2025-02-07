@@ -54,6 +54,34 @@ func (s *UserService) Register(requestParams *request.User) ([]types.Usertypes, 
 	return User, nil
 }
 
+func (s *UserService) GetUsersSevice() ([]types.Usertypes, error) {
+	var orders []types.Usertypes
+
+	// Kết nối database
+	db, err := database.DB1Connection()
+	if err != nil {
+		fmt.Println("Database connection error:", err)
+
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// Truy vấn SQL lấy ngày đặt hàng và tổng số lượng sách đã bán
+	query := `
+		SELECT * FROM OrderSystem.Users 
+
+	`
+
+	// Thực hiện truy vấn và ánh xạ kết quả vào struct
+	err = db.Raw(query).Scan(&orders).Error
+	if err != nil {
+		fmt.Println("Query execution error:", err)
+		return nil, err
+	}
+	return orders, nil
+}
+
 func (s *UserService) Login(requestParams *request.User) (string, error) {
 	var user types.Usertypes
 
