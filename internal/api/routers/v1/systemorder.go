@@ -38,7 +38,8 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	router.POST("/SearchBaseSizes", controllers.BaseSizes.SearchBaseSizes)
 
 	//Router order
-	router.POST("/order/:userID", controllers.NewOrderController().PlaceOrder)
+	router.POST("/order/:userID", controllers.NewOrderController().PlaceOrder)               //checkout
+	router.GET("/orders/:orderID/details", controllers.NewOrderController().GetOrderDetails) //lấy OrderDetails theo OrderID
 
 	//router cart
 	router.GET("/cart/:userID", controllers.NewCartController().GetCart)

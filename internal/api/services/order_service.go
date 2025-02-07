@@ -104,3 +104,24 @@ func (s *OrderService) PlaceOrder(userID int) (*request.OrderRequest, error) {
 	order.OrderDetails = orderDetails
 	return &order, nil
 }
+
+func (s *OrderService) GetOrderDetailsByOrderID(orderID int) ([]request.OrderDetailsRequest, error) {
+	db, err := database.DB1Connection()
+	if err != nil {
+		return nil, err
+	}
+	dbInstance, _ := db.DB()
+	defer dbInstance.Close()
+
+	// 🔹 Truy vấn danh sách OrderDetails theo orderID
+	var orderDetails []request.OrderDetailsRequest
+	err = db.Where("order_id = ?", orderID).Find(&orderDetails).Error
+	if err != nil {
+		return nil, err
+	}
+
+	// 🔹 Debug danh sách trả về
+	fmt.Printf("Order ID: %d, Details: %+v\n", orderID, orderDetails)
+
+	return orderDetails, nil
+}

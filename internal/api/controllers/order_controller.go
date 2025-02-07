@@ -36,3 +36,23 @@ func (c *OrderController) PlaceOrder(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, order)
 }
+
+// 🛒 API: Lấy danh sách OrderDetails theo OrderID
+func (c *OrderController) GetOrderDetails(ctx *gin.Context) {
+	// 📌 Lấy orderID từ URL
+	orderID, err := strconv.Atoi(ctx.Param("orderID"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid order ID"})
+		return
+	}
+
+	// 📌 Gọi service để lấy danh sách OrderDetails
+	orderDetails, err := c.orderService.GetOrderDetailsByOrderID(orderID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// ✅ Trả về JSON danh sách OrderDetails
+	ctx.JSON(http.StatusOK, gin.H{"order_details": orderDetails})
+}
