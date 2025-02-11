@@ -34,7 +34,7 @@ type OrderService struct {
 // ✅ Hàm khởi tạo `OrderService`
 func NewOrderService(vnpay *VNPayService) *OrderService {
 	return &OrderService{vnpay: vnpay}
-}	
+}
 
 func (s *OrderService) PlaceOrder(orderRequest request.OrderRequest) (*request.OrderRequest, string, error) {
 	db, err := database.DB1Connection()
@@ -99,16 +99,15 @@ func (s *OrderService) PlaceOrder(orderRequest request.OrderRequest) (*request.O
 	}
 
 	// 🔹 Xóa giỏ hàng sau khi tạo đơn hàng
-	err = db.Where("user_id = ?", orderRequest.UserID).Delete(&CartDB{}).Error
-	if err != nil {
-		return nil, "", fmt.Errorf("Không thể xóa giỏ hàng sau khi đặt hàng")
-	}
+	// err = db.Where("user_id = ?", orderRequest.UserID).Delete(&CartDB{}).Error
+	// if err != nil {
+	// 	return nil, "", fmt.Errorf("Không thể xóa giỏ hàng sau khi đặt hàng")
+	// }
 
 	// 🔹 Gán danh sách orderDetails vào order và trả về kết quả
 	order.OrderDetails = orderDetails
 	return &order, paymentURL, nil
 }
-
 
 func (s *OrderService) GetOrderDetailsByOrderID(orderID int) ([]request.OrderDetailsRequest, error) {
 	db, err := database.DB1Connection()

@@ -50,9 +50,10 @@ func RegisterOrderSystemRouter(router *gin.RouterGroup) {
 	}
 	vnpayService := services.NewVNPayService(vnpayConfig)
 	orderService := services.NewOrderService(vnpayService)
-	controllers.InitOrderController(orderService)
+	controllers.InitOrderController(orderService, vnpayService)
 
-	router.POST("/checkout", controllers.Orders.PlaceOrder)                    // API: checkout
+	router.POST("/checkout", controllers.Orders.PlaceOrder) // API: checkout
+	router.GET("/callback", controllers.Orders.VNPayCallback)
 	router.GET("/orders/:orderID/details", controllers.Orders.GetOrderDetails) // API: lấy OrderDetails theo OrderID
 	router.GET("/users/:userID/orders", controllers.Orders.GetOrdersByUserID)  // API: lấy tất cả đơn hàng theo UserID
 	router.PUT("/orders/:orderID/cancel", controllers.Orders.CancelOrder)      //  API hủy đơn hàng
