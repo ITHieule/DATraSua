@@ -26,51 +26,54 @@ func (CartDB) TableName() string {
 	return "Cart" // Tên bảng thật trong database
 }
 
-type OrderService struct{}
-
-func NewOrderService() *OrderService {
-	return &OrderService{}
+// OrderService xử lý logic đặt hàng
+type OrderService struct {
+	vnpay *VNPayService
 }
 
-func (s *OrderService) PlaceOrder(userID int) (*request.OrderRequest, error) {
+// ✅ Hàm khởi tạo `OrderService`
+func NewOrderService(vnpay *VNPayService) *OrderService {
+	return &OrderService{vnpay: vnpay}
+}	
+
+func (s *OrderService) PlaceOrder(orderRequest request.OrderRequest) (*request.OrderRequest, string, error) {
 	db, err := database.DB1Connection()
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	dbInstance, _ := db.DB()
 	defer dbInstance.Close()
 
-	// 🔹 Truy vấn giỏ hàng (DÙNG `CartDB` để tránh lỗi)
+	// 🔹 Truy vấn giỏ hàng dựa trên `orderRequest.UserID`
 	var cartItems []CartDB
-	err = db.Where("user_id = ?", userID).Find(&cartItems).Error
+	err = db.Where("user_id = ?", orderRequest.UserID).Find(&cartItems).Error
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	if len(cartItems) == 0 {
-		return nil, fmt.Errorf("Cart is empty")
+		return nil, "", fmt.Errorf("Giỏ hàng trống")
 	}
 
-	// 🔹 Tạo đơn hàng
+	// 🔹 Tính tổng tiền từ giỏ hàng
+	totalAmount := 0
+	for _, item := range cartItems {
+		totalAmount += int(item.Price) * item.Quantity
+	}
+
+	// 🔹 Tạo đơn hàng mới
 	order := request.OrderRequest{
-		UserID:    userID,
+		UserID:    orderRequest.UserID,
 		OrderDate: time.Now(),
 		Status:    "Đang xử lý",
 	}
 	err = db.Create(&order).Error
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	// 🔹 Chuyển từ Cart → OrderDetails
+	// 🔹 Chuyển dữ liệu từ giỏ hàng → OrderDetails
 	var orderDetails []request.OrderDetailsRequest
 	for _, cart := range cartItems {
-		// 🔹 Lấy danh sách Extras từ ExtraIDs
-		extras, err := GetExtrasFromIDs(db, cart.ExtraIDs)
-		if err != nil {
-			return nil, err
-		}
-
-		// 🔹 Thêm vào order_details
 		orderDetails = append(orderDetails, request.OrderDetailsRequest{
 			Order_id:     int(order.ID),
 			Base_id:      cart.BaseID,
@@ -81,29 +84,31 @@ func (s *OrderService) PlaceOrder(userID int) (*request.OrderRequest, error) {
 			ExtraIDs:     cart.ExtraIDs,
 			Price:        cart.Price,
 		})
-
-		// Debug danh sách Extras
-		fmt.Printf("Cart ID: %d, Extras: %+v\n", cart.ID, extras)
 	}
 
-	// Lưu order_details vào DB
-	for i := range orderDetails {
-		orderDetails[i].Order_id = int(order.ID) // 🚀 Gán Order_id trước khi lưu
-	}
+	// 🔹 Lưu danh sách OrderDetails vào database
 	err = db.Create(&orderDetails).Error
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
-	// err = db.Table("Cart").Where("user_id = ?", userID).Delete(nil).Error
-
+	// 🔹 Tạo URL thanh toán VNPay
+	paymentURL, err := s.vnpay.GenerateVNPayURL(fmt.Sprintf("%d", order.ID), totalAmount)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 
+	// 🔹 Xóa giỏ hàng sau khi tạo đơn hàng
+	err = db.Where("user_id = ?", orderRequest.UserID).Delete(&CartDB{}).Error
+	if err != nil {
+		return nil, "", fmt.Errorf("Không thể xóa giỏ hàng sau khi đặt hàng")
+	}
+
+	// 🔹 Gán danh sách orderDetails vào order và trả về kết quả
 	order.OrderDetails = orderDetails
-	return &order, nil
+	return &order, paymentURL, nil
 }
+
 
 func (s *OrderService) GetOrderDetailsByOrderID(orderID int) ([]request.OrderDetailsRequest, error) {
 	db, err := database.DB1Connection()

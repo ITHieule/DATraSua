@@ -24,7 +24,11 @@ func NewVNPayService(cfg *config.VNPayConfig) *VNPayService {
 // GenerateVNPayURL tạo URL thanh toán VNPay với chữ ký chính xác
 func (v *VNPayService) GenerateVNPayURL(orderID string, amount int) (string, error) {
 	log.Println("[VNPay] 🔹 Bắt đầu tạo URL thanh toán...")
-
+	// 🔹 Kiểm tra nếu Config bị nil
+	if v.Config == nil {
+		log.Fatal(" VNPayService.Config chưa được khởi tạo!")
+		return "", fmt.Errorf("VNPayService chưa được khởi tạo")
+	}
 	vnpParams := map[string]string{
 		"vnp_Version":    "2.1.0",
 		"vnp_Command":    "pay",
@@ -40,7 +44,7 @@ func (v *VNPayService) GenerateVNPayURL(orderID string, amount int) (string, err
 		"vnp_CreateDate": time.Now().Format("20060102150405"),
 	}
 
-	log.Printf("[VNPay] 📌 Thông tin đầu vào: %+v\n", vnpParams)
+	log.Printf("[VNPay] Thông tin đầu vào: %+v\n", vnpParams)
 
 	// ✅ Encode từng tham số trước khi hash
 	hashData := v.createHash(vnpParams)

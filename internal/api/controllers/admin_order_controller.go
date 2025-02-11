@@ -12,11 +12,14 @@ type AdminOrderController struct {
 	orderService *services.OrderService
 }
 
-func NewAdminOrderController() *AdminOrderController {
+var Ordersadmin = &AdminOrderController{}
+
+func NewAdminOrderController(orderService *services.OrderService) *AdminOrderController {
 	return &AdminOrderController{
-		orderService: services.NewOrderService(),
+		orderService: orderService, // ✅ Gán đúng cách
 	}
 }
+
 
 // 📌 API: Lấy danh sách trạng thái đơn hàng
 func (c *AdminOrderController) GetOrderStatusList(ctx *gin.Context) {
